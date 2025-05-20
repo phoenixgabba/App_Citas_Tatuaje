@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v=1.1">
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #d4af37;
+            font-family: 'CloisterBlack', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-container {
+            background-color: #222222;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+            width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #d4af37;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border: 2px solid #d4af37;
+            border-radius: 10px;
+            background-color: #333333;
+            color: #d4af37;
+            font-family: 'CloisterBlack', serif;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            background-color: #d4af37;
+            color: #000000;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'CloisterBlack', serif;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #b88d2f;
+        }
+
+        footer {
+            background-color: #111111;
+            color: #d4af37;
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid #444;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .back-link {
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 16px;
+            display: block;
+            margin-top: 20px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <h1>Registrarse</h1>
+        <form action="{{ url_for('registro') }}" method="POST">
+            <input type="text" name="usuario" placeholder="Usuario" required>
+            <input type="password" name="contraseña" placeholder="Contraseña" required>
+            <input type="password" name="confirmar_contraseña" placeholder="Confirmar Contraseña" required>
+            <input type="submit" value="Registrar">
+        </form>
+        <a href="{{ url_for('login') }}" class="back-link">¿Ya tienes cuenta? Inicia sesión aquí</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 - Sistema de Citas Tatuajes</p>
+    </footer>
+
+</body>
+</html>

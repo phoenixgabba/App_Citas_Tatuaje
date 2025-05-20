@@ -1,0 +1,143 @@
+/* styles.css */
+
+/* Definir la fuente gótica correctamente */
+@font-face {
+    font-family: 'CloisterBlack';
+    src: url('/static/CloisterBlack.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Estructura base */
+body {
+    font-family: 'CloisterBlack', serif;
+    background-color: #0a0a0a; /* Fondo oscuro */
+    color: #d4af37; /* Color dorado */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: auto; /* Ajuste para que la altura no sea fija */
+    min-height: 100vh; /* Asegura que el contenido ocupe al menos toda la altura de la pantalla */
+    box-sizing: border-box;
+    padding: 0 20px; /* Añadido espacio lateral */
+}
+
+/* Títulos */
+h1, h2, h3, h4 {
+    font-family: 'CloisterBlack', serif;
+    color: #d4af37;
+    text-align: center;
+    margin-bottom: 20px; /* Espacio debajo del título */
+    font-size: 32px;  /* Tamaño de fuente ajustado */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);  /* Sombra para dar más énfasis */
+    flex-shrink: 0;  /* Evita que el título se reduzca */
+}
+
+/* Contenedor para título y formulario */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 600px;  /* Limita el ancho máximo */
+    height: auto;
+    padding-top: 80px; /* Espacio adicional por si el título está arriba */
+}
+
+/* Estilo para los formularios */
+form {
+    background-color: #222222; /* Fondo oscuro */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+    width: 100%;
+    max-width: 400px; /* Ancho máximo */
+    text-align: center;
+    box-sizing: border-box;
+    margin-top: 40px; /* Añadido para espacio entre el título y el formulario */
+}
+
+/* Entrada de texto y contraseñas */
+input[type="text"], input[type="password"], input[type="email"], textarea {
+    width: 100%;
+    padding: 18px;
+    border: 2px solid #d4af37; /* Borde dorado */
+    border-radius: 10px;
+    background-color: #333333;
+    color: #d4af37;
+    margin-bottom: 20px;
+    font-size: 18px;  /* Aumento del tamaño de la fuente */
+    font-family: 'CloisterBlack', serif;
+}
+
+/* Estilo para el botón de submit */
+input[type="submit"] {
+    background-color: #d4af37; /* Dorado */
+    color: #000000;
+    padding: 18px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'CloisterBlack', serif;
+    font-size: 20px;  /* Aumento del tamaño de la fuente */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #b88d2f; /* Dorado oscuro al pasar el mouse */
+}
+
+/* Enlaces */
+a {
+    color: #d4af37;
+    text-decoration: none;
+    font-family: 'CloisterBlack', serif;
+    font-size: 18px;  /* Aumento del tamaño de la fuente */
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Footer */
+footer {
+    background-color: #111111; /* Fondo negro */
+    color: #d4af37;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Flash messages */
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash-messages .success {
+    background-color: #4CAF50;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.flash-messages .error {
+    background-color: #f44336;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Estilo para checkboxes */
+input[type="checkbox"] {
+    accent-color: #d4af37;
+    margin-right: 8px;
+}
+
+/* Textarea personalizado */
+textarea {
+    font-size: 18px;  /* Aumento del tamaño de la fuente */
+}

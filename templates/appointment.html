@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Cita</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v=1.0">
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="titulo">Agregar cita de tatuaje</h2>
+        <form method="POST" action="/nueva_cita">
+            <!-- Nombre -->
+            <label for="name">Nombre:</label>
+            <input type="text" name="name" id="name" required placeholder="Escribe tu nombre completo">
+
+            <!-- Fecha -->
+            <label for="date">Fecha:</label>
+            <input type="date" name="date" id="date" required>
+
+            <!-- Hora -->
+            <label for="time">Hora:</label>
+            <input type="time" name="time" id="time" required>
+
+            <!-- Precio -->
+            <label for="price">Precio (en USD):</label>
+            <input type="number" name="price" id="price" required min="1" step="any" placeholder="Introduce el precio">
+
+            <!-- Señal -->
+            <label for="signal">Señal (opcional):</label>
+            <input type="text" name="signal" id="signal" placeholder="Indica si has hecho algún pago de señal">
+
+            <!-- Comentario -->
+            <label for="comment">Comentario (opcional):</label>
+            <textarea name="comment" id="comment" rows="4" placeholder="Escribe cualquier detalle adicional"></textarea>
+
+            <!-- Botón de enviar -->
+            <button type="submit">Guardar cita</button>
+        </form>
+    </div>
+</body>
+</html>

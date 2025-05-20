@@ -1,0 +1,168 @@
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_migrate import Migrate
+from waitress import serve
+import os
+from datetime import datetime
+
+# Inicialización de la aplicación Flask
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'tu_clave_secreta'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///citas.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Inicialización de la base de datos y migraciones
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+# Modelo para la tabla de usuarios
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    usuario = db.Column(db.String(150), unique=True, nullable=False)
+    contraseña = db.Column(db.String(150), nullable=False)
+
+# Modelo para la tabla de citas
+class Cita(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(150), nullable=False)
+    contacto = db.Column(db.String(150), nullable=False)
+    zona = db.Column(db.String(150), nullable=False)
+    tamano = db.Column(db.String(100), nullable=False)
+    precio = db.Column(db.String(100), nullable=False)
+    senal = db.Column(db.String(100), nullable=False)
+    comentario = db.Column(db.Text, nullable=True)
+    dias = db.Column(db.String(200), nullable=False)
+    horario = db.Column(db.String(100), nullable=False)
+    archivos = db.Column(db.String(500), nullable=True)
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)
+
+# Ruta de inicio
+@app.route('/')
+def index():
+    if 'usuario_id' in session:
+        citas = Cita.query.all()
+        return render_template('index.html', citas=citas)
+    return redirect(url_for('login'))
+
+# Ruta para registro
+@app.route('/registro', methods=['GET', 'POST'])
+def registro():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        contraseña = request.form['contraseña']
+        confirmar_contraseña = request.form['confirmar_contraseña']
+
+        if contraseña != confirmar_contraseña:
+            flash('Las contraseñas no coinciden', 'error')
+            return redirect(url_for('registro'))
+
+        hashed_password = generate_password_hash(contraseña, method='pbkdf2:sha256')
+        nuevo_usuario = Usuario(usuario=usuario, contraseña=hashed_password)
+        db.session.add(nuevo_usuario)
+        db.session.commit()
+
+        flash('Cuenta registrada con éxito', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('registro.html')
+
+# Ruta para iniciar sesión
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        usuario = request.form['usuario']
+        contraseña = request.form['contraseña']
+
+        usuario_encontrado = Usuario.query.filter_by(usuario=usuario).first()
+
+        if not usuario_encontrado or not check_password_hash(usuario_encontrado.contraseña, contraseña):
+            flash('Usuario o contraseña incorrectos', 'error')
+            return redirect(url_for('login'))
+
+        session['usuario_id'] = usuario_encontrado.id
+        flash('Bienvenido de nuevo', 'success')
+        return redirect(url_for('index'))
+
+    return render_template('login.html')
+
+# Ruta para agregar una nueva cita
+@app.route('/nueva_cita', methods=['GET', 'POST'])
+def nueva_cita():
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        contacto = request.form['contacto']
+        zona = request.form['zona']
+        tamano = request.form['tamano']
+        precio = request.form['precio']
+        senal = request.form['senal']
+        comentario = request.form['comentario']
+        dias = ', '.join(request.form.getlist('dias'))
+        horario = request.form['horario']
+        archivos = request.files.getlist('archivos')
+
+        # Guardar archivos
+        archivo_paths = []
+        upload_folder = os.path.join('static', 'uploads')
+        os.makedirs(upload_folder, exist_ok=True)
+
+        for archivo in archivos:
+            if archivo and archivo.filename != '':
+                archivo_path = os.path.join(upload_folder, archivo.filename)
+                archivo.save(archivo_path)
+                archivo_paths.append(archivo_path)
+
+        cita = Cita(
+            nombre=nombre,
+            contacto=contacto,
+            zona=zona,
+            tamano=tamano,
+            precio=precio,
+            senal=senal,
+            comentario=comentario,
+            dias=dias,
+            horario=horario,
+            archivos=', '.join(archivo_paths)
+        )
+
+        db.session.add(cita)
+        db.session.commit()
+
+        flash('Cita guardada correctamente', 'success')
+        return redirect(url_for('index'))
+
+    return render_template('agregar_cita.html')
+
+# Ruta para eliminar una cita
+@app.route('/eliminar_cita/<int:cita_id>', methods=['POST'])
+def eliminar_cita(cita_id):
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+
+    cita = Cita.query.get_or_404(cita_id)
+    db.session.delete(cita)
+    db.session.commit()
+
+    flash('Cita eliminada correctamente', 'success')
+    return redirect(url_for('index'))
+
+# Ruta para cerrar sesión
+@app.route('/logout')
+def logout():
+    session.pop('usuario_id', None)
+    flash('Has cerrado sesión', 'success')
+    return redirect(url_for('login'))
+
+# Servidor principal con waitress
+if __name__ == '__main__':
+    try:
+        with app.app_context():
+            db.create_all()
+            print("Base de datos inicializada correctamente.")
+        print("Iniciando servidor en http://127.0.0.1:5000")
+        serve(app, host='127.0.0.1', port=5000)
+    except Exception as e:
+        print(f"❌ Error al iniciar la app: {e}")

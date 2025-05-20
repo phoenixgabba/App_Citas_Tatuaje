@@ -1,0 +1,15 @@
+class Cita(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    contacto = db.Column(db.String(100), nullable=False)
+    zona = db.Column(db.String(100), nullable=False)
+    tamano = db.Column(db.String(50), nullable=False)
+    precio = db.Column(db.String(20), nullable=False)
+    senal = db.Column(db.String(20), nullable=False)
+    comentario = db.Column(db.Text)
+    dias = db.Column(db.String(100), nullable=False)
+    horario = db.Column(db.String(50), nullable=False)
+    archivos = db.Column(db.Text)
+    fecha = db.Column(db.String(20))   # ← ESTA línea debe existir
+    dia = db.Column(db.String(20))
+    hora = db.Column(db.String(20))
